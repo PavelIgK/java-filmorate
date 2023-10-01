@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.util.validate.FilmValidation;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequestMapping("/films")
 public class FilmController {
 
+    private final FilmValidation filmValidate = new FilmValidation();
     protected final Map<Integer, Film> films = new HashMap<>();
     private int id = 0;
 
@@ -26,18 +28,22 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
-        film.setId(++id);
+        filmValidate.validate(film);
+        if (film.getId() != 0) {
+            throw new ValidationException("В метод создания пришел фильм с id");
+        }
+        film = film.toBuilder().id(++id).build();
         films.put(film.getId(), film);
-        log.info("Добавлен новый фильм. " + film);
+        log.debug("Добавлен новый фильм. " + film);
         return film;
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
-
+        filmValidate.validate(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-            log.info("Обновлен фильм." + film);
+            log.debug("Обновлен фильм." + film);
         } else {
             throw new ValidationException("Фильма с такими id нет");
         }

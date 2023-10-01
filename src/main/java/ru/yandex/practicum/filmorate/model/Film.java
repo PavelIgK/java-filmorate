@@ -1,15 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.validation.annotation.Validated;
 import ru.yandex.practicum.filmorate.util.validate.ReleaseDate;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import java.time.Instant;
 import java.time.LocalDate;
 
 @Data

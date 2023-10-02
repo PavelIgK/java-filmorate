@@ -2,53 +2,61 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.validate.FilmValidation;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Фильмы.
+ * Обработчик запросов по эндпоинту /films.
+ */
 @Slf4j
 @RestController
 @RequestMapping("/films")
-public class FilmController {
-
+public class FilmController extends Controller<Film> {
     private final FilmValidation filmValidate = new FilmValidation();
-    protected final Map<Integer, Film> films = new HashMap<>();
-    private int id = 0;
 
-    @GetMapping
-    public List<Film> getFilms() {
-        return new ArrayList<>(films.values());
+    /**
+     * Получаем все фильмы.
+     * @return Список фильмов.
+     */
+    @Override
+    @GetMapping()
+    public List<Film> get() {
+        return super.get();
     }
 
+    /**
+     * Добавляем фильм если он валиден.
+     * @param film входящая сущность.
+     * @return добавленный фильм.
+     */
+    @Override
     @PostMapping
-    public Film addFilm(@Valid @RequestBody Film film) {
-        filmValidate.validate(film);
-        if (film.getId() != 0) {
-            throw new ValidationException("В метод создания пришел фильм с id");
-        }
-        film = film.toBuilder().id(++id).build();
-        films.put(film.getId(), film);
-        log.debug("Добавлен новый фильм. " + film);
-        return film;
+    public Film add(@Valid @RequestBody Film film) {
+        return super.add(film);
     }
 
+    /**
+     * Обновляем фильм если он валиден.
+     * @param film сущность.
+     * @return обновленный фильм.
+     */
+    @Override
     @PutMapping
-    public Film updateFilm(@Valid @RequestBody Film film) {
-        filmValidate.validate(film);
-        if (films.containsKey(film.getId())) {
-            films.put(film.getId(), film);
-            log.debug("Обновлен фильм." + film);
-        } else {
-            throw new ValidationException("Фильма с такими id нет");
-        }
-
-        return film;
+    public Film update(@Valid @RequestBody Film film) {
+        return super.update(film);
     }
 
+    /**
+     * Валидируем фильм.
+     * @param film сущность.
+     */
+    @Override
+    protected void validate(Film film) {
+        log.debug("Validate in film");
+        filmValidate.isValid(film);
+    }
 }

@@ -1,19 +1,19 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
+/**
+ * Структура пользователя.
+ */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder(toBuilder = true)
-public class User {
-
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+public class User extends Entity {
 
     @NotBlank
     @Email

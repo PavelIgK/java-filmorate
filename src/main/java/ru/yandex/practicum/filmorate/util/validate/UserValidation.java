@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
+/**
+ * Валидация пользователя.
+ */
 @Slf4j
 public class UserValidation {
 

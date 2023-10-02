@@ -1,18 +1,21 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.filmorate.util.validate.ReleaseDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+/**
+ * Структура фильма.
+ */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder(toBuilder = true)
-public class Film {
-
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+public class Film extends Entity {
 
     @NotBlank(message = "Название не может быть пустым.")
     private String name;

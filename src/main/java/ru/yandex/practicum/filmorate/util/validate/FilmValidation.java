@@ -6,9 +6,12 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
+/**
+ * Валидация фильма.
+ */
 public class FilmValidation {
 
-    public void validate(Film film) {
+    public void isValid(Film film) {
 
         if (film.getName().isEmpty()) {
             throw new ValidationException("Название не может быть пустым.");

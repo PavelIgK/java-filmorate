@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.util.validate.FilmValidation;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/films")
+@Component
 public class FilmController extends Controller<Film> {
-    private final FilmValidation filmValidate = new FilmValidation();
 
     /**
      * Получаем все фильмы.
@@ -57,6 +57,5 @@ public class FilmController extends Controller<Film> {
     @Override
     protected void validate(Film film) {
         log.debug("Validate in film");
-        filmValidate.isValid(film);
     }
 }

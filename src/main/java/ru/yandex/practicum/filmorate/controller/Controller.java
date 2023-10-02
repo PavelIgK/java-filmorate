@@ -17,7 +17,8 @@ import java.util.Map;
 public abstract class Controller<T extends Entity> {
 
     protected final Map<Integer, T> maps = new HashMap<>();
-    private int id = 0;
+
+    int id = 0;
 
     /**
      * Получим все текущие сущности.

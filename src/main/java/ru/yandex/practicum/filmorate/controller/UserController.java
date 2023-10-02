@@ -1,9 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.util.validate.UserValidation;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -13,9 +13,9 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@Component
 @RequestMapping("/users")
 public class UserController extends Controller<User> {
-    private final UserValidation userValidation = new UserValidation();
 
     /**
      * Получаем всех пользователей.
@@ -35,6 +35,9 @@ public class UserController extends Controller<User> {
     @Override
     @PostMapping()
     public User add(@Valid @RequestBody User user) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user =  user.toBuilder().name(user.getLogin()).build();
+        }
         return super.add(user);
     }
 
@@ -56,6 +59,5 @@ public class UserController extends Controller<User> {
     @Override
     protected void validate(User user) {
         log.debug("Validate in film");
-        userValidation.isValid(user);
     }
 }

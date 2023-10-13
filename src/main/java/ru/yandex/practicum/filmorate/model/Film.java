@@ -7,15 +7,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * Структура фильма.
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Film extends Entity {
+public class Film {
+    @Setter(AccessLevel.PRIVATE)
+    private int id;
 
     @NotBlank(message = "Название не может быть пустым.")
     private String name;
@@ -28,5 +30,9 @@ public class Film extends Entity {
 
     @Positive(message = "Продолжительность фильма должна быть положительной.")
     private long duration;
+
+    private int rate;
+
+    private Set<Integer> likes;
 
 }

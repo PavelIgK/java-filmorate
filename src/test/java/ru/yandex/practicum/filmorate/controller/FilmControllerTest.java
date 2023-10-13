@@ -16,6 +16,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -47,6 +48,7 @@ class FilmControllerTest {
                 .description("Description1")
                 .releaseDate(LocalDate.of(2023, 9, 30))
                 .duration(180)
+                .likes(new HashSet<>())
                 .build();
     }
 

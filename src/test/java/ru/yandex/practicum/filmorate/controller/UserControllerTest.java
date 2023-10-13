@@ -15,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,6 +44,7 @@ class UserControllerTest {
                 .login("userLogin")
                 .name("userName")
                 .birthday(LocalDate.of(2000, 9, 30))
+                .friends(new HashSet<>())
                 .build();
     }
 

@@ -5,18 +5,17 @@ import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Структура пользователя.
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class User {
-
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+public class User extends Entity {
 
     @NotBlank
     @Email
@@ -35,5 +34,5 @@ public class User {
     @PastOrPresent
     private LocalDate birthday;
 
-    private Set<Integer> friends;
+    private Set<Integer> friends = new HashSet<>();
 }

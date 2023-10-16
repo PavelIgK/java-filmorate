@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,20 +32,20 @@ public class FilmService {
     }
 
     public Film getFilmById(int filmId) {
-        return filmStorage.getFilmById(filmId);
+        return filmStorage.getById(filmId);
     }
 
     public void addLike(int filmId, int userId) {
-        userStorage.getUserById(userId);
-        Film film = filmStorage.getFilmById(filmId);
+        userStorage.getById(userId);
+        Film film = filmStorage.getById(filmId);
         film.getLikes().add(userId);
         film.setRate(film.getRate() + 1);
         log.debug("Лайк от пользователя с id {} добавлен к фильму с id {} ", userId, filmId);
     }
 
     public void removeLike(int filmId, int userId) {
-        userStorage.getUserById(userId);
-        Film film = filmStorage.getFilmById(filmId);
+        userStorage.getById(userId);
+        Film film = filmStorage.getById(filmId);
         boolean likeDeleted = film.getLikes().remove(userId);
         if (likeDeleted) {
             film.setRate(film.getRate() - 1);

@@ -7,17 +7,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Структура фильма.
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Film {
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+public class Film extends Entity {
 
     @NotBlank(message = "Название не может быть пустым.")
     private String name;
@@ -33,6 +33,6 @@ public class Film {
 
     private int rate;
 
-    private Set<Integer> likes;
+    private Set<Integer> likes = new HashSet<>();
 
 }

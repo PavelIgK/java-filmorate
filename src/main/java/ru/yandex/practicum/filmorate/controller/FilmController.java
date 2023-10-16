@@ -1,9 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -14,48 +15,53 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/films")
-@Component
-public class FilmController extends Controller<Film> {
+public class FilmController {
 
-    /**
-     * Получаем все фильмы.
-     * @return Список фильмов.
-     */
-    @Override
-    @GetMapping()
-    public List<Film> get() {
-        return super.get();
+    private final FilmService filmService;
+
+    @GetMapping
+    public List<Film> getAll() {
+        log.debug("[getAll] Start.");
+        return filmService.getAll();
     }
 
-    /**
-     * Добавляем фильм если он валиден.
-     * @param film входящая сущность.
-     * @return добавленный фильм.
-     */
-    @Override
     @PostMapping
-    public Film add(@Valid @RequestBody Film film) {
-        return super.add(film);
+    public Film create(@RequestBody @Valid Film film) {
+        log.debug("[create] Start.");
+        return filmService.add(film);
     }
 
-    /**
-     * Обновляем фильм если он валиден.
-     * @param film сущность.
-     * @return обновленный фильм.
-     */
-    @Override
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
-        return super.update(film);
+    public Film update(@RequestBody Film updatedFilm) {
+        log.debug("[update] Start.");
+        return filmService.update(updatedFilm);
     }
 
-    /**
-     * Валидируем фильм.
-     * @param film сущность.
-     */
-    @Override
-    protected void validate(Film film) {
-        log.debug("Validate in film");
+    @GetMapping("/{id}")
+    public Film getFilmById(@PathVariable(value = "id") int filmId) {
+        log.debug("[getFilmById] Start.");
+        return filmService.getFilmById(filmId);
+    }
+
+    @PutMapping("{id}/like/{userId}")
+    public void addLike(@PathVariable(value = "id") int filmId,
+                        @PathVariable(value = "userId") int userId) {
+        log.debug("[addLike] Start.");
+        filmService.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{id}/like/{userId}")
+    public void removeLike(@PathVariable(value = "id") int filmId,
+                           @PathVariable(value = "userId") int userId) {
+        log.debug("[removeLike] Start.");
+        filmService.removeLike(filmId, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopularFilm(@RequestParam(required = false, defaultValue = "10") int count) {
+        log.debug("[getPopularFilm] Start.");
+        return filmService.getPopularFilm(count);
     }
 }

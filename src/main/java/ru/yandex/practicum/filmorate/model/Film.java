@@ -7,12 +7,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Структура фильма.
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 public class Film extends Entity {
@@ -28,5 +30,9 @@ public class Film extends Entity {
 
     @Positive(message = "Продолжительность фильма должна быть положительной.")
     private long duration;
+
+    private int rate;
+
+    private Set<Integer> likes = new HashSet<>();
 
 }

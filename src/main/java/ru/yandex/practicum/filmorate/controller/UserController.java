@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -13,51 +15,63 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Component
+@RequiredArgsConstructor
 @RequestMapping("/users")
-public class UserController extends Controller<User> {
+public class UserController {
 
-    /**
-     * Получаем всех пользователей.
-     * @return Список пользователей.
-     */
-    @Override
-    @GetMapping()
-    public List<User> get() {
-        return super.get();
+    private final UserService userService;
+
+    @GetMapping
+    public List<User> getAll() {
+        log.debug("[getAll] Start.");
+        return userService.getAll();
     }
 
-    /**
-     * Добавляем пользователя если он валиден.
-     * @param user входящая сущность.
-     * @return Добавленный пользователь.
-     */
-    @Override
-    @PostMapping()
-    public User add(@Valid @RequestBody User user) {
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user =  user.toBuilder().name(user.getLogin()).build();
+    @PostMapping
+    public User add(@RequestBody @Valid User user) {
+        log.debug("[add] Start.");
+        if (user.getName() == null || user.getName().isBlank()) {
+            user.setName(user.getLogin());
         }
-        return super.add(user);
+        return userService.add(user);
     }
 
-    /**
-     * Обновляем пользователя если он валиден.
-     * @param user сущность.
-     * @return обновленный пользователь
-     */
-    @Override
-    @PutMapping()
-    public User update(@Valid @RequestBody User user) {
-        return super.update(user);
+    @PutMapping
+    public User update(@RequestBody @Valid User user) {
+        log.debug("[update] Start.");
+        return userService.update(user);
     }
 
-    /**
-     * Валидируем пользователя.
-     * @param user сущность.
-     */
-    @Override
-    protected void validate(User user) {
-        log.debug("Validate in film");
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable(value = "id") int id) {
+        log.debug("[getUserById] Start.");
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@PathVariable(value = "id") int id,
+                                       @PathVariable(value = "otherId") int otherId) {
+        log.debug("[getCommonFriends] Start.");
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable(value = "id") int id,
+                          @PathVariable(value = "friendId") int friendId) {
+        log.debug("[addFriend] Start.");
+        userService.addFriend(id, friendId);
+    }
+
+    @GetMapping("{id}/friends")
+    public List<User> getFriends(@PathVariable(value = "id") int id) {
+        log.debug("[getFriends] Start.");
+        return userService.getFriends(id);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable(value = "id") int id,
+                             @PathVariable(value = "friendId") int friendId) {
+        log.debug("[removeFriend] Start.");
+        userService.removeFriend(id, friendId);
     }
 }

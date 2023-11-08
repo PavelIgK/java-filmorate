@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
@@ -41,11 +42,11 @@ public class FilmService {
         Mpa currentMpa = mpaStorage.getById(film.getMpa().getId())
                 .orElseThrow(() -> new NotFoundException("Нет рейтинга с таким id."));
 
-        film.setGenres(film.getGenres()
-                .stream().sorted()
-                .peek(it -> {
-                    it.setName(genreStorage.getById(it.getId()).get().getName());
-                }).collect(Collectors.toSet()));
+//        film.setGenres(film.getGenres()
+//                .stream().sorted()
+//                .peek(it -> {
+//                    it.setName(genreStorage.getById(it.getId()).get().getName());
+//                }).collect(Collectors.toSet()));
 
         film =  film.toBuilder()
                 .id(++id)
@@ -59,11 +60,11 @@ public class FilmService {
         Mpa currentMpa = mpaStorage.getById(film.getMpa().getId())
                 .orElseThrow(() -> new NotFoundException("Нет рейтинга с таким id."));
 
-        film.setGenres(film.getGenres()
-                .stream().sorted()
-                .peek(it -> {
-                    it.setName(genreStorage.getById(it.getId()).get().getName());
-                }).collect(Collectors.toSet()));
+//        film.setGenres(film.getGenres()
+//                .stream().sorted()
+//                .peek(it -> {
+//                    it.setName(genreStorage.getById(it.getId()).get().getName());
+//                }).collect(Collectors.toSet()));
 
         film =  film.toBuilder()
                 .genres(film.getGenres())
@@ -79,11 +80,11 @@ public class FilmService {
     }
 
     public void addLike(Long filmId, Long userId) {
-        userStorage.getById(userId)
+        User userLike = userStorage.getById(userId)
                 .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + userId));;
         Film film = filmStorage.getById(filmId)
                 .orElseThrow(() -> new NotFoundException("Нет фильма с id = " + filmId));
-        film.getLikes().add(userId);
+        //boolean add = film.getLikes().add(userLike);
         film.setRate(film.getRate() + 1);
         log.debug("Лайк от пользователя с id {} добавлен к фильму с id {} ", userId, filmId);
     }

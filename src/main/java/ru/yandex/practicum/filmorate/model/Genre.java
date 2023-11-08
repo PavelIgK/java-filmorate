@@ -1,21 +1,32 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.criteria.CriteriaBuilder;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Genre extends BaseEntity<Integer> implements Comparable<Genre> {
+@Entity
+@Table(name = "genre")
+public class Genre  extends BaseEntity<Integer> implements Comparable<Genre> {
+
+    @Id
+    @Column(name = "genre_id")
+    private Integer id;
+
     String name;
+
     @Override
     public int compareTo(Genre o) {
-        System.out.println("====" + this.getId().compareTo(o.getId()));
         return this.getId().compareTo(o.getId());
     }
 

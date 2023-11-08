@@ -1,15 +1,16 @@
 package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import ru.yandex.practicum.filmorate.util.validate.ReleaseDate;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,7 +22,13 @@ import java.util.TreeSet;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
+@Entity
+@Table(name = "film")
 public class Film extends BaseEntity<Long> {
+
+    @Id
+    @Column(name = "film_id")
+    private Long id;
 
     @NotBlank(message = "Название не может быть пустым.")
     private String name;
@@ -37,12 +44,15 @@ public class Film extends BaseEntity<Long> {
 
     private int rate;
 
+    @OneToMany(mappedBy = "filmId", fetch = FetchType.EAGER)
+    Set<FilmGenre> genres = new HashSet<>();
 
-    Set<Genre> genres = new TreeSet<>();
-
+    @NotNull(message = "Рейтинг MPA не может быть пустым")
+    @OneToOne
     Mpa mpa;
 
     @JsonIgnore
-    private Set<Long> likes = new HashSet<>();
+    @OneToMany(mappedBy = "filmId", fetch = FetchType.EAGER)
+    private Set<UserLike> likes = new HashSet<>();
 
 }

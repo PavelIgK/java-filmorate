@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -15,7 +16,13 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class User extends BaseEntity<Long> {
+@Entity
+@Table(name = "users")
+public class User  extends BaseEntity<Long> {
+
+    @Id
+    @Column(name = "user_id")
+    private Long id;
 
     @NotBlank
     @Email
@@ -34,6 +41,6 @@ public class User extends BaseEntity<Long> {
     @PastOrPresent
     private LocalDate birthday;
 
-
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
     private Set<Friendship> friendship = new HashSet<>();
 }

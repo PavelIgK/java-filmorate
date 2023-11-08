@@ -14,7 +14,7 @@ public abstract class AbstractStorageImpl<T extends BaseEntity<S>, S> implements
     private final Map<S, T> storage = new HashMap<>();
 
     @Override
-    public List<T> getAll() {
+    public List<T> findAll() {
         return new ArrayList<>(storage.values());
     }
 
@@ -39,7 +39,7 @@ public abstract class AbstractStorageImpl<T extends BaseEntity<S>, S> implements
     }
 
     @Override
-    public Optional<T> getById(S id) {
+    public Optional<T> findById(S id) {
         log.debug("Запрос получения сущности с id = {}.", id);
         if (!storage.containsKey(id)) {
             throw new NotFoundException("Сущность не найдена.");

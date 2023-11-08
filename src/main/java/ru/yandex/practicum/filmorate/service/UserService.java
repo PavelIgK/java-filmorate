@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Friendship;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.Friendship;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.Comparator;
@@ -31,7 +31,7 @@ public class UserService {
         if (Optional.ofNullable(user.getId()).isPresent()) {
             throw new ValidationException("В метод создания пришел пользователь с id");
         }
-        user =  user.toBuilder().id(++id).build();
+        user = user.toBuilder().id(++id).build();
         return userStorage.add(user);
     }
 
@@ -57,7 +57,8 @@ public class UserService {
                 .getFriendship()
                 .stream()
                 .map(Friendship::getFriendId)
-                .collect(Collectors.toSet());;
+                .collect(Collectors.toSet());
+        ;
 
         Set<Long> commonFriendsId = userFriends.stream()
                 .filter(otherUserFriends::contains)

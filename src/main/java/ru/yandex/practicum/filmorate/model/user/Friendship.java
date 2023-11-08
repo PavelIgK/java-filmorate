@@ -1,12 +1,13 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
+import ru.yandex.practicum.filmorate.model.foreignkey.FriendshipForeignKey;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 
 @Data
 @SuperBuilder(toBuilder = true)

@@ -1,8 +1,11 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.user.Friendship;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -19,7 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User  extends BaseEntity<Long> {
+public class User extends BaseEntity<Long> {
 
     @Id
     @Column(name = "user_id")
@@ -48,8 +51,8 @@ public class User  extends BaseEntity<Long> {
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="user_film_like",
-            joinColumns=  @JoinColumn(name="user_id", referencedColumnName="user_id"),
-            inverseJoinColumns= @JoinColumn(name="film_id", referencedColumnName="film_id") )
+    @JoinTable(name = "user_film_like",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "film_id", referencedColumnName = "film_id"))
     private Set<Film> films = new HashSet<>();
 }

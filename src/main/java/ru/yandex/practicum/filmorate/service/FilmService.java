@@ -5,14 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
-import ru.yandex.practicum.filmorate.model.Mpa;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.MpaStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,7 @@ public class FilmService {
                     it.setName(genreStorage.getById(it.getId()).get().getName());
                 }).collect(Collectors.toSet()));
 
-        film =  film.toBuilder()
+        film = film.toBuilder()
                 .id(++id)
                 .mpa(currentMpa)
                 .build();
@@ -66,7 +67,7 @@ public class FilmService {
                     it.setName(genreStorage.getById(it.getId()).get().getName());
                 }).collect(Collectors.toSet()));
 
-        film =  film.toBuilder()
+        film = film.toBuilder()
                 .genres(film.getGenres())
                 .mpa(currentMpa)
                 .build();
@@ -81,7 +82,8 @@ public class FilmService {
 
     public void addLike(Long filmId, Long userId) {
         User userLike = userStorage.getById(userId)
-                .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + userId));;
+                .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + userId));
+        ;
         Film film = filmStorage.getById(filmId)
                 .orElseThrow(() -> new NotFoundException("Нет фильма с id = " + filmId));
         //boolean add = film.getLikes().add(userLike);
@@ -91,7 +93,8 @@ public class FilmService {
 
     public void removeLike(Long filmId, Long userId) {
         userStorage.getById(userId)
-                .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + filmId));;
+                .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + filmId));
+        ;
         Film film = filmStorage.getById(filmId)
                 .orElseThrow(() -> new NotFoundException("Нет фильма с id = " + filmId));
         boolean likeDeleted = film.getLikes().remove(userId);

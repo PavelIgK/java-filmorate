@@ -1,20 +1,19 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.foreignkey;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 
 @EqualsAndHashCode
 @Embeddable
 @Data
-public class FilmGenreForeignKey implements Serializable {
+public class UserLikeForeignKey implements Serializable {
+    @Column(name = "user_id")
+    private Long userId;
+
     @Column(name = "film_id")
     private Long filmId;
-
-    @Column(name = "genre_id")
-    private Long genreId;
 }

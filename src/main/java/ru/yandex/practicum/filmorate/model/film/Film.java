@@ -1,8 +1,10 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
+import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.util.validate.ReleaseDate;
 
 import javax.persistence.*;
@@ -13,7 +15,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
+
 
 /**
  * Структура фильма.
@@ -45,9 +47,9 @@ public class Film extends BaseEntity<Long> {
     private int rate;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="film_genre",
-            joinColumns=  @JoinColumn(name="film_id", referencedColumnName="film_id"),
-            inverseJoinColumns= @JoinColumn(name="genre_id", referencedColumnName="genre_id") )
+    @JoinTable(name = "film_genre",
+            joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id", referencedColumnName = "genre_id"))
     private Set<Genre> genres = new HashSet<>();
 
     @NotNull(message = "Рейтинг MPA не может быть пустым")
@@ -56,9 +58,9 @@ public class Film extends BaseEntity<Long> {
 
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="user_film_like",
-            joinColumns=  @JoinColumn(name="film_id", referencedColumnName="film_id"),
-            inverseJoinColumns= @JoinColumn(name="user_id", referencedColumnName="user_id") )
+    @JoinTable(name = "user_film_like",
+            joinColumns = @JoinColumn(name = "film_id", referencedColumnName = "film_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"))
     private Set<User> likes = new HashSet<>();
 
 

@@ -7,5 +7,5 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 @Slf4j
 @Component
-public class FilmStorageInMemoryImpl extends AbstractStorageImpl<Film> implements FilmStorage {
+public class FilmStorageInMemoryImpl extends AbstractStorageImpl<Film, Long> implements FilmStorage {
 }

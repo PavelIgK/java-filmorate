@@ -15,7 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class User extends Entity {
+public class User extends BaseEntity<Long> {
 
     @NotBlank
     @Email
@@ -34,5 +34,6 @@ public class User extends Entity {
     @PastOrPresent
     private LocalDate birthday;
 
-    private Set<Integer> friends = new HashSet<>();
+
+    private Set<Friendship> friendship = new HashSet<>();
 }

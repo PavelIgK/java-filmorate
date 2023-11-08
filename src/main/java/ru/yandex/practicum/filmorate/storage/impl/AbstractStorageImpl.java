@@ -2,18 +2,16 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
-import ru.yandex.practicum.filmorate.model.Entity;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.*;
 
 @Slf4j
 
-public abstract class AbstractStorageImpl<T extends Entity> implements Storage<T> {
+public abstract class AbstractStorageImpl<T extends BaseEntity<S>, S> implements Storage<T, S> {
 
-    private final Map<Integer, T> storage = new HashMap<>();
-    int id = 0;
+    private final Map<S, T> storage = new HashMap<>();
 
     @Override
     public List<T> getAll() {
@@ -22,13 +20,7 @@ public abstract class AbstractStorageImpl<T extends Entity> implements Storage<T
 
     @Override
     public T add(T t) {
-        if (t.getId() != 0) {
-            throw new ValidationException("В метод создания пришла сущность с id");
-        }
-
         log.debug("Сущность для добавления: {}.", t);
-        //noinspection unchecked
-        t = (T) t.toBuilder().id(++id).build();
         storage.put(t.getId(), t);
         log.debug("Добавлена новая сущность. {}.", t);
         return t;
@@ -47,11 +39,11 @@ public abstract class AbstractStorageImpl<T extends Entity> implements Storage<T
     }
 
     @Override
-    public T getById(int id) {
+    public Optional<T> getById(S id) {
         log.debug("Запрос получения сущности с id = {}.", id);
         if (!storage.containsKey(id)) {
             throw new NotFoundException("Сущность не найдена.");
         }
-        return storage.get(id);
+        return Optional.ofNullable(storage.get(id));
     }
 }

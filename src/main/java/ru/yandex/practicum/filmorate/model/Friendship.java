@@ -1,19 +1,18 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-/**
- * Сущность для реализаций объектов.
- */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Entity {
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+public class Friendship extends BaseEntity<Integer> {
+
+    long friendId;
+
+    @EqualsAndHashCode.Exclude
+    boolean confirmed;
 }

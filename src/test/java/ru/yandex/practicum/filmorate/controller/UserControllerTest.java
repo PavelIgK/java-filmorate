@@ -44,7 +44,7 @@ class UserControllerTest {
                 .login("userLogin")
                 .name("userName")
                 .birthday(LocalDate.of(2000, 9, 30))
-                .friends(new HashSet<>())
+                .friendship(new HashSet<>())
                 .build();
     }
 
@@ -52,7 +52,7 @@ class UserControllerTest {
     public void create_CorrectUser() throws Exception {
         assertEquals(0, sendGet().size(), "Список пользователей должен быть пуст.");
         checkCorrectRequest(sendPost(user), user);
-        user = user.toBuilder().id(1).build();
+        user = user.toBuilder().id(1L).build();
         assertEquals(1, sendGet().size(), "Количество пользователей в списке некорректно.");
         assertEquals(user, sendGet().get(0), "Вернулся некорректный пользователь.");
     }
@@ -62,7 +62,7 @@ class UserControllerTest {
         assertEquals(0, sendGet().size(), "Список пользователей должен быть пуст.");
         sendPost(user);
         assertEquals(1, sendGet().size(), "Количество пользователей в списке некорректно.");
-        user = user.toBuilder().id(1).name("UserNameNew").build();
+        user = user.toBuilder().id(1L).name("UserNameNew").build();
         checkCorrectRequest(sendPut(user), user);
         assertEquals(1, sendGet().size(), "Количество пользователей в списке некорректно.");
         assertEquals(user.getName(), sendGet().get(0).getName());

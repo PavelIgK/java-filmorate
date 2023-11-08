@@ -7,6 +7,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 @Slf4j
 @Component
-public class UserStorageInMemoryImpl extends AbstractStorageImpl<User> implements UserStorage {
+public class UserStorageInMemoryImpl extends AbstractStorageImpl<User, Long> implements UserStorage {
 
 }

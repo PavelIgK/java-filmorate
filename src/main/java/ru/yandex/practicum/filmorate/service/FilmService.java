@@ -42,11 +42,11 @@ public class FilmService {
         Mpa currentMpa = mpaStorage.getById(film.getMpa().getId())
                 .orElseThrow(() -> new NotFoundException("Нет рейтинга с таким id."));
 
-//        film.setGenres(film.getGenres()
-//                .stream().sorted()
-//                .peek(it -> {
-//                    it.setGenreId(genreStorage.getById(it.getId()).get().getName());
-//                }).collect(Collectors.toSet()));
+        film.setGenres(film.getGenres()
+                .stream().sorted()
+                .peek(it -> {
+                    it.setName(genreStorage.getById(it.getId()).get().getName());
+                }).collect(Collectors.toSet()));
 
         film =  film.toBuilder()
                 .id(++id)
@@ -60,11 +60,11 @@ public class FilmService {
         Mpa currentMpa = mpaStorage.getById(film.getMpa().getId())
                 .orElseThrow(() -> new NotFoundException("Нет рейтинга с таким id."));
 
-//        film.setGenres(film.getGenres()
-//                .stream().sorted()
-//                .map(it ->
-//                    it.toBuilder().genreId(it.getId()).build())
-//                .collect(Collectors.toSet()));
+        film.setGenres(film.getGenres()
+                .stream().sorted()
+                .peek(it -> {
+                    it.setName(genreStorage.getById(it.getId()).get().getName());
+                }).collect(Collectors.toSet()));
 
         film =  film.toBuilder()
                 .genres(film.getGenres())

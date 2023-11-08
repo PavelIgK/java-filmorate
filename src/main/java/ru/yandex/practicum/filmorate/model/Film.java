@@ -44,8 +44,11 @@ public class Film extends BaseEntity<Long> {
 
     private int rate;
 
-    @OneToMany(mappedBy = "filmId", fetch = FetchType.EAGER)
-    Set<FilmGenre> genres = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="film_genre",
+            joinColumns=  @JoinColumn(name="film_id", referencedColumnName="film_id"),
+            inverseJoinColumns= @JoinColumn(name="genre_id", referencedColumnName="genre_id") )
+    private Set<Genre> genres = new HashSet<>();
 
     @NotNull(message = "Рейтинг MPA не может быть пустым")
     @OneToOne

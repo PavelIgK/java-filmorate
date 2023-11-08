@@ -11,12 +11,11 @@ import javax.persistence.*;
 
 @Data
 @SuperBuilder(toBuilder = true)
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
 @Table(name = "user_friend")
 @IdClass(FriendshipForeignKey.class)
-public class Friendship extends BaseEntity<Long> {
+public class Friendship {
 
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)

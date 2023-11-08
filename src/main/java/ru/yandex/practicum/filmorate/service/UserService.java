@@ -2,6 +2,9 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
 
     private final UserStorage userStorage;
     private Long id = 0L;
@@ -81,7 +85,11 @@ public class UserService {
 
 
         user.getFriendship().add(Friendship.builder()
+                .userId(user.getId())
+
                 .friendId(friendId)
+
+                        .confirmed(false)
                 .build());
         userStorage.update(user);
     }

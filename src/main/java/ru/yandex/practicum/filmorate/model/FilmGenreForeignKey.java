@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.Serializable;
 
 @EqualsAndHashCode
@@ -15,5 +16,5 @@ public class FilmGenreForeignKey implements Serializable {
     private Long filmId;
 
     @Column(name = "genre_id")
-    private Long id;
+    private Long genreId;
 }

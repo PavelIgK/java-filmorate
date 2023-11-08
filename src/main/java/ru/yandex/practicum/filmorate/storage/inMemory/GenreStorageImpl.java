@@ -6,5 +6,5 @@ import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.impl.AbstractStorageImpl;
 
 @Component
-public class GenreStorageImpl extends AbstractStorageImpl<Genre, Integer> implements GenreStorage {
+public class GenreStorageImpl extends AbstractStorageImpl<Genre, Long> implements GenreStorage {
 }

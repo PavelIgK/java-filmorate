@@ -55,7 +55,11 @@ public class Film extends BaseEntity<Long> {
     Mpa mpa;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "filmId", fetch = FetchType.EAGER)
-    private Set<UserLike> likes = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="user_film_like",
+            joinColumns=  @JoinColumn(name="film_id", referencedColumnName="film_id"),
+            inverseJoinColumns= @JoinColumn(name="user_id", referencedColumnName="user_id") )
+    private Set<User> likes = new HashSet<>();
+
 
 }

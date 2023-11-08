@@ -16,11 +16,11 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "genre")
-public class Genre  extends BaseEntity<Integer> implements Comparable<Genre> {
+public class Genre  extends BaseEntity<Long> implements Comparable<Genre> {
 
     @Id
     @Column(name = "genre_id")
-    private Integer id;
+    private Long id;
 
     String name;
 

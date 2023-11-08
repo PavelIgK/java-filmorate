@@ -116,7 +116,7 @@ public class FilmService {
         return genreStorage.getAll();
     }
 
-    public Genre getGenreById(Integer genreId) {
+    public Genre getGenreById(Long genreId) {
         return genreStorage.getById(genreId)
                 .orElseThrow(() -> new NotFoundException("Не найден жанр с id = " + genreId));
     }

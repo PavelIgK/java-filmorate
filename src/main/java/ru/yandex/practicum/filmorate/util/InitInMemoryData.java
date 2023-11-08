@@ -54,32 +54,32 @@ public class InitInMemoryData {
     public void initGenres() {
 
         genreStorage.add(Genre.builder()
-                .id(1)
+                .id(1L)
                 .name("Комедия")
                 .build());
 
         genreStorage.add(Genre.builder()
-                .id(2)
+                .id(2L)
                 .name("Драма")
                 .build());
 
         genreStorage.add(Genre.builder()
-                .id(3)
+                .id(3L)
                 .name("Мультфильм")
                 .build());
 
         genreStorage.add(Genre.builder()
-                .id(4)
+                .id(4L)
                 .name("Триллер")
                 .build());
 
         genreStorage.add(Genre.builder()
-                .id(5)
+                .id(5L)
                 .name("Документальный")
                 .build());
 
         genreStorage.add(Genre.builder()
-                .id(6)
+                .id(6L)
                 .name("Боевик")
                 .build());
 

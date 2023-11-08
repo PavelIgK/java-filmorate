@@ -17,7 +17,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 @IdClass(FriendshipForeignKey.class)
 public class Friendship extends BaseEntity<Long> {
 
-
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     private User userOne;
@@ -25,7 +24,6 @@ public class Friendship extends BaseEntity<Long> {
     @Id
     @Column(name = "user_id")
     private Long userId;
-
 
     @JoinColumn(name = "friend_id", insertable = false, updatable = false)
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)

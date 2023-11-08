@@ -18,7 +18,7 @@ public class FilmGenre extends BaseEntity<Integer> {
 
 
     @JoinColumn(name = "genre_id", insertable = false, updatable = false)
-    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Genre.class, fetch = FetchType.EAGER)
     private Genre genre;
 
     @Id
@@ -27,7 +27,7 @@ public class FilmGenre extends BaseEntity<Integer> {
 
 
     @JoinColumn(name = "film_id", insertable = false, updatable = false)
-    @ManyToOne(targetEntity = Film.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Film.class, fetch = FetchType.EAGER)
     private Film film;
 
     @Id

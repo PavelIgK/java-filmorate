@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -41,6 +42,7 @@ public class User  extends BaseEntity<Long> {
     @PastOrPresent
     private LocalDate birthday;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
     private Set<Friendship> friendship = new HashSet<>();
 }

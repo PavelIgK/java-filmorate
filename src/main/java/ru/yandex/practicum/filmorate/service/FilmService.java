@@ -45,7 +45,7 @@ public class FilmService {
 //        film.setGenres(film.getGenres()
 //                .stream().sorted()
 //                .peek(it -> {
-//                    it.setName(genreStorage.getById(it.getId()).get().getName());
+//                    it.setGenreId(genreStorage.getById(it.getId()).get().getName());
 //                }).collect(Collectors.toSet()));
 
         film =  film.toBuilder()
@@ -62,9 +62,9 @@ public class FilmService {
 
 //        film.setGenres(film.getGenres()
 //                .stream().sorted()
-//                .peek(it -> {
-//                    it.setName(genreStorage.getById(it.getId()).get().getName());
-//                }).collect(Collectors.toSet()));
+//                .map(it ->
+//                    it.toBuilder().genreId(it.getId()).build())
+//                .collect(Collectors.toSet()));
 
         film =  film.toBuilder()
                 .genres(film.getGenres())

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -71,13 +72,16 @@ public class UserService {
     public void addFriend(Long id, Long friendId) {
         log.debug("Добавляем к пользователю с id {} друга с id {}", id, friendId);
 
+
         User user = userStorage.getById(id)
                 .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + id));
-        userStorage.getById(friendId)
+        User friend = userStorage.getById(friendId)
                 .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + friendId));
 
 
-        user.getFriendship().add(Friendship.builder().friendId(friendId).build());
+        user.getFriendship().add(Friendship.builder()
+                .friendId(friendId)
+                .build());
         userStorage.update(user);
     }
 
@@ -88,7 +92,8 @@ public class UserService {
         userStorage.getById(friendId)
                 .orElseThrow(() -> new NotFoundException("Нет пользователя с id = " + friendId));
 
-        user.getFriendship().remove(Friendship.builder().friendId(friendId).build());
+        user.getFriendship().remove(Friendship.builder()
+                .friendId(friendId).build());
         userStorage.update(user);
     }
 
@@ -99,6 +104,7 @@ public class UserService {
 
         return user.getFriendship()
                 .stream()
+                .sorted(Comparator.comparing(Friendship::getFriendId))
                 .map(Friendship::getFriendId)
                 .map(userStorage::getById)
                 .filter(Optional::isPresent)

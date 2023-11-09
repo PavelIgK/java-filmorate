@@ -18,11 +18,10 @@ import java.util.Optional;
 public class GenreStorageDBImpl implements GenreStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private String query = "";
 
     @Override
     public List<Genre> findAll() {
-        query = "SELECT genre_id, name FROM genre";
+        String query = "SELECT genre_id, name FROM genre";
         return jdbcTemplate.query(query, this::mapGenre);
     }
 
@@ -38,7 +37,7 @@ public class GenreStorageDBImpl implements GenreStorage {
 
     @Override
     public Optional<Genre> findById(Integer id) {
-        query = "SELECT genre_id, name FROM genre WHERE genre_id = ?";
+        String query = "SELECT genre_id, name FROM genre WHERE genre_id = ?";
         return jdbcTemplate.query(query, this::mapGenre, id).stream().findAny();
     }
 

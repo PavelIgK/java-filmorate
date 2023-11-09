@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yandex.practicum.filmorate.model.user.Friendship;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -20,12 +22,10 @@ import java.util.*;
 public class UserStorageDBImpl implements UserStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private String query = "";
-
 
     @Override
     public List<User> findAll() {
-        query = "SELECT user_id, email, login, name, birthday FROM users";
+        String query = "SELECT user_id, email, login, name, birthday FROM users";
         return jdbcTemplate.query(query, this::mapUser);
     }
 
@@ -33,7 +33,7 @@ public class UserStorageDBImpl implements UserStorage {
     @Override
     public User add(User user) {
 
-        query = "INSERT INTO users (user_id, email, login, name, birthday) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO users (user_id, email, login, name, birthday) VALUES (?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(query,
                 user.getId(),
@@ -48,7 +48,7 @@ public class UserStorageDBImpl implements UserStorage {
     @Transactional
     @Override
     public User update(User user) {
-        query = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
+        String query = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? WHERE user_id = ?";
 
         jdbcTemplate.update(query,
                 user.getEmail(),
@@ -64,18 +64,18 @@ public class UserStorageDBImpl implements UserStorage {
 
         Set<Friendship> removeFriends = new HashSet<>(oldFriends);
         removeFriends.removeAll(newFriends);
-        removeFriends.forEach(it -> removeFriendship(user.getId(), it.getFriendId()));
+        removeFriendship(user.getId(), removeFriends);
 
         Set<Friendship> toAddFriendships = new HashSet<>(newFriends);
         toAddFriendships.removeAll(oldFriends);
-        toAddFriendships.forEach(it -> addFriendship(user.getId(), it.getFriendId(), it.isConfirmed()));
+        addFriendship(user.getId(), toAddFriendships);
 
         return findById(user.getId()).get();
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        query = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id = ?";
+        String query = "SELECT user_id, email, login, name, birthday FROM users WHERE user_id = ?";
         return jdbcTemplate.query(query, this::mapUser, id).stream().findAny();
     }
 
@@ -107,18 +107,31 @@ public class UserStorageDBImpl implements UserStorage {
                 .build();
     }
 
-    private void addFriendship(Long userId, Long friendId, boolean isConfirmed) {
-        query = "INSERT INTO user_friend (user_id, friend_id, confirmed) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query, userId, friendId, isConfirmed);
+    private void addFriendship(Long userId, Set<Friendship> friendships) {
+        String query = "INSERT INTO user_friend (user_id, friend_id, confirmed) VALUES (?, ?, ?)";
+        jdbcTemplate.batchUpdate(query,
+                friendships,
+                50,
+                (PreparedStatement ps, Friendship friendship) -> {
+                    ps.setLong(1, userId);
+                    ps.setLong(2, friendship.getFriendId());
+                    ps.setBoolean(3, friendship.isConfirmed());
+                });
     }
 
-    private void removeFriendship(Long userId, Long friendId) {
-        query = "DELETE FROM user_friend WHERE user_id = ? AND friend_id = ?";
-        jdbcTemplate.update(query, userId, friendId);
+    private void removeFriendship(Long userId, Set<Friendship> friendships) {
+        String query = "DELETE FROM user_friend WHERE user_id = ? AND friend_id = ?";
+        jdbcTemplate.batchUpdate(query,
+                friendships,
+                50,
+                (PreparedStatement ps, Friendship friendship) -> {
+                    ps.setLong(1, userId);
+                    ps.setLong(2, friendship.getFriendId());
+                });
     }
 
     private Set<Friendship> findFriendshipByUserId(Long userId) {
-        query = "SELECT friend_id, confirmed FROM user_friend WHERE user_id = ?";
+        String query = "SELECT friend_id, confirmed FROM user_friend WHERE user_id = ?";
         return new HashSet<>(jdbcTemplate.query(query, this::mapFriendship, userId));
     }
 

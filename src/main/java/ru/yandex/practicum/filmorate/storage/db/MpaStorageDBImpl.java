@@ -18,12 +18,10 @@ import java.util.Optional;
 public class MpaStorageDBImpl implements MpaStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    private String query = "";
-
-
+    
     @Override
     public List<Mpa> findAll() {
-        query = "SELECT mpa_id, name, description FROM mpa";
+        String query = "SELECT mpa_id, name, description FROM mpa";
         return jdbcTemplate.query(query, this::mapMpa);
     }
 
@@ -39,7 +37,7 @@ public class MpaStorageDBImpl implements MpaStorage {
 
     @Override
     public Optional<Mpa> findById(Integer id) {
-        query = "SELECT mpa_id, name, description FROM mpa WHERE mpa_id = ?";
+        String query = "SELECT mpa_id, name, description FROM mpa WHERE mpa_id = ?";
         return jdbcTemplate.query(query, this::mapMpa, id).stream().findAny();
     }
 

@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.model.film.Genre;
 import ru.yandex.practicum.filmorate.model.film.Mpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -25,13 +26,11 @@ public class FilmStorageDBImpl implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorageDBImpl genreStorageDB;
     private final MpaStorageDBImpl mpaStorageDB;
-
-    private String query = "";
-
+    
     @Transactional
     @Override
     public Film add(Film film) {
-        query = "INSERT INTO film (film_id, name, description, mpa_id, release_date, duration) " +
+        String query = "INSERT INTO film (film_id, name, description, mpa_id, release_date, duration) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(query,
                 film.getId(),
@@ -48,7 +47,7 @@ public class FilmStorageDBImpl implements FilmStorage {
     @Transactional
     @Override
     public Film update(Film film) {
-        query = "UPDATE film SET name = ?, description = ?, mpa_id = ?, release_date = ?, duration = ?" +
+        String query = "UPDATE film SET name = ?, description = ?, mpa_id = ?, release_date = ?, duration = ?" +
                 " WHERE film_id = ?";
 
         jdbcTemplate.update(query,
@@ -91,25 +90,49 @@ public class FilmStorageDBImpl implements FilmStorage {
 
     @Override
     public Optional<Film> findById(Long id) {
-        query = "SELECT film_id, name, description, mpa_id, release_date, duration FROM film WHERE film_id = ?";
+        String query = "SELECT f.film_id" +
+                ", f.name as film_name" +
+                ", f.description as film_description" +
+                ", f.mpa_id" +
+                ", f.release_date" +
+                ", f.duration" +
+                ", m.name as mpa_name" +
+                ", m.description as mpa_description" +
+                " FROM film AS f LEFT JOIN mpa as m ON f.mpa_id = m.mpa_id" +
+                " WHERE f.film_id = ?";
         return jdbcTemplate.query(query, this::mapFilm, id).stream().findAny();
     }
 
     @Override
     public List<Film> findAll() {
-        query = "SELECT film_id, name, description, mpa_id, release_date, duration FROM film";
+        String query = "SELECT f.film_id" +
+                ", f.name as film_name" +
+                ", f.description as film_description" +
+                ", f.mpa_id" +
+                ", f.release_date" +
+                ", f.duration" +
+                ", m.name as mpa_name" +
+                ", m.description as mpa_description" +
+                " FROM film AS f LEFT JOIN mpa as m ON f.mpa_id = m.mpa_id";
         return jdbcTemplate.query(query, this::mapFilm);
     }
 
     private Film mapFilm(ResultSet rs, int rowNum) throws SQLException {
         Long filmId = rs.getLong("film_id");
-        String name = rs.getString("name");
-        String description = rs.getString("description");
+        String name = rs.getString("film_name");
+        String description = rs.getString("film_description");
         LocalDate releaseDate = rs.getDate("release_date").toLocalDate();
         Integer duration = rs.getInt("duration");
         Integer mpaId = rs.getInt("mpa_id");
-        Mpa mpa = mpaStorageDB.findById(mpaId).orElse(null);
+        String mpaName = rs.getString("mpa_name");
+        String mpaDescription = rs.getString("mpa_description");
 
+
+        Mpa mpa = Mpa.builder()
+                .id(mpaId)
+                .name(mpaName)
+                .description(mpaDescription)
+                .build();
 
         Film film = Film.builder()
                 .id(filmId)
@@ -126,37 +149,67 @@ public class FilmStorageDBImpl implements FilmStorage {
     }
 
     private List<Long> findLikesByFilmId(Long filmId) {
-        query = "SELECT user_id FROM film_like WHERE film_id = ?";
+        String query = "SELECT user_id FROM film_like WHERE film_id = ?";
         return jdbcTemplate.query(query, (rs, rowNum) -> rs.getLong("user_id"), filmId);
     }
 
     private void addLikes(Film film, List<Long> userIds) {
-        query = "INSERT INTO film_like (film_id, user_id) VALUES (?, ?)";
-        userIds.forEach(it -> jdbcTemplate.update(query, film.getId(), it));
+        String query = "INSERT INTO film_like (film_id, user_id) VALUES (?, ?)";
+        jdbcTemplate.batchUpdate(query,
+                userIds,
+                50,
+                (PreparedStatement ps, Long userId) -> {
+                    ps.setLong(1, film.getId());
+                    ps.setLong(2, userId);
+                });
     }
 
     private void removeLikes(Film film, List<Long> userIds) {
-        query = "DELETE FROM film_like WHERE film_id = ? AND user_id = ?";
-        userIds.forEach(it -> jdbcTemplate.update(query, film.getId(), it));
+        String query = "DELETE FROM film_like WHERE film_id = ? AND user_id = ?";
+        jdbcTemplate.batchUpdate(query,
+                userIds,
+                50,
+                (PreparedStatement ps, Long userId) -> {
+                    ps.setLong(1, film.getId());
+                    ps.setLong(2, userId);
+                });
     }
 
     private void addGenre(Film film, Set<Genre> genres) {
-        query = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
-        genres.forEach(genre -> jdbcTemplate.update(query, film.getId(), genre.getId()));
+        String query = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+        jdbcTemplate.batchUpdate(query,
+                genres,
+                50,
+                (PreparedStatement ps, Genre genre) -> {
+                    ps.setLong(1, film.getId());
+                    ps.setInt(2, genre.getId());
+                });
     }
 
     private void addGenreList(Film film, List<Integer> genreIds) {
-        query = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
-        genreIds.forEach(genreId -> jdbcTemplate.update(query, film.getId(), genreId));
+        String query = "INSERT INTO film_genre (film_id, genre_id) VALUES (?, ?)";
+        jdbcTemplate.batchUpdate(query,
+                genreIds,
+                50,
+                (PreparedStatement ps, Integer genreId) -> {
+                    ps.setLong(1, film.getId());
+                    ps.setInt(2, genreId);
+                });
     }
 
     private void removeGenreList(Film film, List<Integer> genreIds) {
-        query = "DELETE FROM film_genre WHERE film_id = ? AND genre_id = ?";
-        genreIds.forEach(genreId -> jdbcTemplate.update(query, film.getId(), genreId));
+        String query = "DELETE FROM film_genre WHERE film_id = ? AND genre_id = ?";
+        jdbcTemplate.batchUpdate(query,
+                genreIds,
+                50,
+                (PreparedStatement ps, Integer genreId) -> {
+                    ps.setLong(1, film.getId());
+                    ps.setInt(2, genreId);
+                });
     }
 
     private List<Integer> findGenresIdByFilmId(Long filmId) {
-        query = "SELECT genre_id FROM film_genre WHERE film_id = ?";
+        String query = "SELECT genre_id FROM film_genre WHERE film_id = ?";
         return jdbcTemplate.query(query, (rs, rowNum) -> rs.getInt("genre_id"), filmId);
     }
 

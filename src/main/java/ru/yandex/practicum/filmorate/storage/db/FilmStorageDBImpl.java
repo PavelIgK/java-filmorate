@@ -25,8 +25,7 @@ public class FilmStorageDBImpl implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final GenreStorageDBImpl genreStorageDB;
-    private final MpaStorageDBImpl mpaStorageDB;
-    
+
     @Transactional
     @Override
     public Film add(Film film) {

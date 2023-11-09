@@ -18,7 +18,7 @@ import java.util.Optional;
 public class MpaStorageDBImpl implements MpaStorage {
 
     private final JdbcTemplate jdbcTemplate;
-    
+
     @Override
     public List<Mpa> findAll() {
         String query = "SELECT mpa_id, name, description FROM mpa";

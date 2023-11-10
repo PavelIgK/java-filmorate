@@ -1,10 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.AccessLevel;
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -12,8 +10,8 @@ import lombok.experimental.SuperBuilder;
  */
 @Data
 @SuperBuilder(toBuilder = true)
+@EqualsAndHashCode
 @NoArgsConstructor
-public class Entity {
-    @Setter(AccessLevel.PRIVATE)
-    private int id;
+public abstract class BaseEntity<T> {
+    private T id;
 }

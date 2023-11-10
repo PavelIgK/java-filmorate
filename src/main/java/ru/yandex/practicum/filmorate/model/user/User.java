@@ -1,7 +1,8 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ru.yandex.practicum.filmorate.model.BaseEntity;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class User extends Entity {
+public class User extends BaseEntity<Long> {
 
     @NotBlank
     @Email
@@ -34,5 +35,6 @@ public class User extends Entity {
     @PastOrPresent
     private LocalDate birthday;
 
-    private Set<Integer> friends = new HashSet<>();
+
+    private Set<Friendship> friendship = new HashSet<>();
 }
